@@ -8,3 +8,6 @@ Scenario: Subscribe & publish messages
 	When I subscribe to a message
 	And I publish the message
 	Then the message should be received by the subscriber
+
+# todo: Scenario: Subscribe to a message multiple times
+# todo: Scenario: Subscribe to a message with a handler multiple times.

@@ -8,41 +8,30 @@ namespace MessageBusMagic.Support
 {
     internal class MessageHandlers
     {
-        private readonly ConcurrentDictionary<Type, ConcurrentDictionary<int, Func<IMessage, Task>>> Handlers;
+        private readonly ConcurrentDictionary<Type, BlockingCollection<object>> MessageTypes;
 
         internal MessageHandlers()
         {
-            Handlers = new ConcurrentDictionary<Type, ConcurrentDictionary<int, Func<IMessage, Task>>>();
+            MessageTypes = new ConcurrentDictionary<Type, BlockingCollection<object>>();
         }
 
-        internal void SubscribeTo<TMessage>(Func<IMessage, Task> handler) where TMessage : IMessage
+        public void AddHandler<TMessage>(Func<TMessage, Task> handler) where TMessage : IMessage
         {
-            var handlers = GetOrAddHandlersFor(typeof(TMessage));
+            var handlers = GetOrAddMessageType<TMessage>();
 
-            if (handlers.TryAdd(handler.GetHashCode(), handler))
-            {
-                return;
-            }
-
-            var exception = new Exception("Cannot subscribe the a handler more than once.");
-
-            exception.Data.Add("TMessage", typeof(TMessage));
-            exception.Data.Add("handler", handler);
-
-            throw exception;
+            handlers.Add(handler);
         }
 
-        private ConcurrentDictionary<int, Func<IMessage, Task>> GetOrAddHandlersFor(Type messageType)
+        private BlockingCollection<object> GetOrAddMessageType<TMessage>() where TMessage : IMessage
         {
-            return Handlers.GetOrAdd(messageType, key => new ConcurrentDictionary<int, Func<IMessage, Task>>());
+            return MessageTypes.GetOrAdd(typeof(TMessage), new BlockingCollection<object>());
         }
 
-
-        internal IEnumerable<Func<IMessage, Task>> FindHandlersFor<TMessage>() where TMessage : IMessage
+        public IEnumerable<Func<TMessage, Task>> GetHandlers<TMessage>() where TMessage : IMessage
         {
-            ConcurrentDictionary<int, Func<IMessage, Task>> subscribers;
+            var handlers = GetOrAddMessageType<TMessage>();
 
-            return Handlers.TryGetValue(typeof(TMessage), out subscribers) ? subscribers.Values : Enumerable.Empty<Func<IMessage, Task>>();
+            return handlers.Cast<Func<TMessage, Task>>();
         }
     }
 }

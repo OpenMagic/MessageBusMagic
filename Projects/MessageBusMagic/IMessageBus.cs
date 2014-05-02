@@ -14,7 +14,7 @@ namespace MessageBusMagic
         /// </summary>
         /// <typeparam name="TMessage">The type of the message.</typeparam>
         /// <param name="action">The action.</param>
-        Task SubscribeTo<TMessage>(Func<IMessage, Task> action) where TMessage : IMessage;
+        Task SubscribeTo<TMessage>(Func<TMessage, Task> action) where TMessage : IMessage;
 
         /// <summary>
         ///     todo: document

@@ -15,10 +15,9 @@ namespace MessageBusMagic
             MessageHandlers = new MessageHandlers();
         }
 
-        public Task SubscribeTo<TMessage>(Func<IMessage, Task> handler) where TMessage : IMessage
+        public Task SubscribeTo<TMessage>(Func<TMessage, Task> handler) where TMessage : IMessage
         {
-            // todo: Test IMessage in Func<IMessage, Task> is TMessage.
-            return Task.Factory.StartNew(() => MessageHandlers.SubscribeTo<TMessage>(handler));
+            return Task.Factory.StartNew(() => MessageHandlers.AddHandler(handler));
         }
 
         public Task<IEnumerable<Task>> Publish<TMessage>(TMessage message) where TMessage : IMessage
@@ -28,7 +27,7 @@ namespace MessageBusMagic
 
         private IEnumerable<Task> PublishSync<TMessage>(TMessage message) where TMessage : IMessage
         {
-            var handlers = MessageHandlers.FindHandlersFor<TMessage>();
+            var handlers = MessageHandlers.GetHandlers<TMessage>();
 
             return from handler in handlers
                    select handler(message);
