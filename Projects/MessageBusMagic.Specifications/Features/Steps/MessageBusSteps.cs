@@ -12,7 +12,7 @@ namespace MessageBusMagic.Specifications.Features.Steps
     public class MessageBusSteps
     {
         private IMessageBus MessageBus;
-        private IEnumerable<Task> Handlers;
+        private Task<IEnumerable<Task>> Handlers;
         private int ReceivedMessageCount;
 
         [Given(@"I have a MessageBus")]
@@ -36,7 +36,7 @@ namespace MessageBusMagic.Specifications.Features.Steps
         [Then(@"the message should be received by the subscriber")]
         public void ThenTheMessageShouldBeReceivedByTheSubscriber()
         {
-            Task.WaitAll(Handlers.ToArray());
+            Task.WaitAll(Handlers.Result.ToArray());
             ReceivedMessageCount.Should().Be(1);
         }
 
