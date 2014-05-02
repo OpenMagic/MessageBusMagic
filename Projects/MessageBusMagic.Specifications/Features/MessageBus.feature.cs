@@ -75,10 +75,10 @@ namespace MessageBusMagic.Specifications.Features
         
         [Xunit.FactAttribute()]
         [Xunit.TraitAttribute("FeatureTitle", "MessageBus")]
-        [Xunit.TraitAttribute("Description", "Subscribe & publish messages")]
-        public virtual void SubscribePublishMessages()
+        [Xunit.TraitAttribute("Description", "Subscribe to a message")]
+        public virtual void SubscribeToAMessage()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Subscribe & publish messages", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Subscribe to a message", ((string[])(null)));
 #line 6
 this.ScenarioSetup(scenarioInfo);
 #line 7
@@ -88,6 +88,26 @@ this.ScenarioSetup(scenarioInfo);
 #line 9
  testRunner.And("I publish the message", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 10
+ testRunner.Then("the message should be received by the subscriber", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.FactAttribute()]
+        [Xunit.TraitAttribute("FeatureTitle", "MessageBus")]
+        [Xunit.TraitAttribute("Description", "Subscribe to a message multiple times")]
+        public virtual void SubscribeToAMessageMultipleTimes()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Subscribe to a message multiple times", ((string[])(null)));
+#line 12
+this.ScenarioSetup(scenarioInfo);
+#line 13
+ testRunner.Given("I have a MessageBus", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 14
+ testRunner.When("I subscribe to a message multiple times", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 15
+ testRunner.And("I publish the message", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 16
  testRunner.Then("the message should be received by the subscriber", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
