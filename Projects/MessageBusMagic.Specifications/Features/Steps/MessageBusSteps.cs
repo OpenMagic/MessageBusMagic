@@ -12,10 +12,9 @@ namespace MessageBusMagic.Specifications.Features.Steps
     public class MessageBusSteps
     {
         private IMessageBus MessageBus;
-        private Task<IEnumerable<Task>> Publishing;
+        private IEnumerable<Task> Publishing;
         private int ReceivedMessageCount;
         private int SubscribedToMessageCount;
-        private Task Subscribing;
 
         [Given(@"I have a MessageBus")]
         public void GivenIHaveAMessageBus()
@@ -26,7 +25,7 @@ namespace MessageBusMagic.Specifications.Features.Steps
         [When(@"I subscribe to a message")]
         public void WhenISubscribeToAMessage()
         {
-            Subscribing = MessageBus.SubscribeTo<FakeMessage>(ReceiveMessage);
+            MessageBus.SubscribeTo<FakeMessage>(ReceiveMessage);
             SubscribedToMessageCount++;
         }
 
@@ -36,21 +35,19 @@ namespace MessageBusMagic.Specifications.Features.Steps
             for (var i = 0; i < 10; i++)
             {
                 WhenISubscribeToAMessage();
-                Subscribing.Wait();
             }
         }
 
         [When(@"I publish the message")]
         public void WhenIPublishTheMessage()
         {
-            Subscribing.Wait();
             Publishing = MessageBus.Publish(new FakeMessage());
         }
 
         [Then(@"the message should be received by the subscriber")]
         public void ThenTheMessageShouldBeReceivedByTheSubscriber()
         {
-            Task.WaitAll(Publishing.Result.ToArray());
+            Task.WaitAll(Publishing.ToArray());
             ReceivedMessageCount.Should().Be(SubscribedToMessageCount);
         }
 

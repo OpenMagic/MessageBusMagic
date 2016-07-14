@@ -14,13 +14,13 @@ namespace MessageBusMagic
         /// </summary>
         /// <typeparam name="TMessage">The type of the message.</typeparam>
         /// <param name="action">The action.</param>
-        Task SubscribeTo<TMessage>(Func<TMessage, Task> action) where TMessage : IMessage;
+        void SubscribeTo<TMessage>(Func<TMessage, Task> action) where TMessage : IMessage;
 
         /// <summary>
         ///     todo: document
         /// </summary>
         /// <typeparam name="TMessage">The type of the message.</typeparam>
         /// <param name="message">The message.</param>
-        Task<IEnumerable<Task>> Publish<TMessage>(TMessage message) where TMessage : IMessage;
+        IEnumerable<Task> Publish<TMessage>(TMessage message) where TMessage : IMessage;
     }
 }
